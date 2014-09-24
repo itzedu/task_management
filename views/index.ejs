@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.11.1/themes/smoothness/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.1/jquery-ui.js"></script>
+        <link rel="stylesheet" href="/resources/demos/style.css">
+        <script type="text/javascript">
+        $(document).ready(function(){
+            $("#datepicker").datepicker();
+        })
+        </script>
+    </head>
+    <body>
+        <% if (errors.length > 1) { %>
+            <% for(i in errors) { %>
+                <p><%= errors[i] %></p>
+            <% } %>
+        <% } %>
+        <h1>Tasks</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tasks</th>
+                    <th>Priority</th>
+                    <th>Deadline</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(i in tasks) { %>
+                <tr>
+                    <td><%= tasks[i].task_name %></td>
+                    <td><%= tasks[i].priority %></td>
+                    <% var deadline_date = new Date(tasks[i].deadline)
+                       var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]; %>
+                    <td><%= months[deadline_date.getMonth()] + " " +deadline_date.getDate() + ", " + deadline_date.getFullYear()%></td>
+                    <% var created_date = new Date(tasks[i].created_at) %>
+                    <td><%= months[created_date.getMonth()] + " " +created_date.getDate() + ", " + created_date.getFullYear()%></td>
+                    <td>
+                        <form action='/tasks/<%= tasks[i].id %>' method='post'>
+                            <input type='hidden' name='action' value='delete'>
+                            <input type='submit' value='Remove'>
+                        </form>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+
+        <h1>Add a new Task</h1>
+        <form action='/tasks' method='post'>
+            <p>
+                <label>Task Name:</label>
+                <input type='text' name='task_name'>
+            </p>
+            <p>
+                <label>Priority</label>
+                <select name='priority'>
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                </select>
+            </p>
+            <p>
+                <label>Deadline</label>
+                <input type='text' name='deadline' id="datepicker">
+            </p>
+            <input type='submit' value='Create'>
+        </form>
+      </body>
+</html>
